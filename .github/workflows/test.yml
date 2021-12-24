@@ -1,12 +1,8 @@
 name: test
 on:
   push:
-    branches:
-      - '**'
   pull_request:
-    paths:
-      - '**'
-      - '!doc/**'
+  
 jobs:
   e2e:
     runs-on: ubuntu-20.04
@@ -19,9 +15,10 @@ jobs:
         run: |
           . /etc/os-release
           echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-          curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key | sudo apt-key add -
+          curl -sSfL "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/Release.key" | sudo apt-key add -
           sudo apt-get update
-          sudo apt-get -y install conntrack podman
+          sudo apt-get -y upgrade
+          sudo apt-get -y install podman
           podman version
       - name: Create kind cluster and setup local docker registry
         run: |
